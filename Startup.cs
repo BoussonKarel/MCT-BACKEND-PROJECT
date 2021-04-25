@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MCT_BACKEND_PROJECT.Data;
 
 namespace MCT_BACKEND_PROJECT
 {
@@ -30,7 +31,14 @@ namespace MCT_BACKEND_PROJECT
             // Configuratie voor connection strings
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
+            // Context
+            services.AddDbContext<SpellenContext>();
+
             services.AddControllers();
+
+            // Context
+            services.AddTransient<ISpellenContext,SpellenContext>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MCT_BACKEND_PROJECT", Version = "v1" });
