@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MCT_BACKEND_PROJECT.Configuration;
+using Spellen.API.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,10 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using MCT_BACKEND_PROJECT.Data;
-using MCT_BACKEND_PROJECT.Repositories;
+using Spellen.API.Data;
+using Spellen.API.Repositories;
 
-namespace MCT_BACKEND_PROJECT
+namespace Spellen.API
 {
     public class Startup
     {

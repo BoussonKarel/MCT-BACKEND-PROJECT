@@ -1,6 +1,6 @@
 using System;
 
-namespace MCT_BACKEND_PROJECT.Models
+namespace Spellen.API.Models
 {
     public class VariCombi
     {

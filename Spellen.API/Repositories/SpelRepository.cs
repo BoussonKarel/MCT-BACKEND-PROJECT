@@ -5,7 +5,7 @@ using MCT_BACKEND_PROJECT.Data;
 using MCT_BACKEND_PROJECT.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MCT_BACKEND_PROJECT.Repositories
+namespace Spellen.API.Repositories
 {
     public interface ISpelRepository
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCT_BACKEND_PROJECT.Models
+namespace Spellen.API.Models
 {
     public class Materiaal
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace MCT_BACKEND_PROJECT
+namespace Spellen.API
 {
     public class WeatherForecast
     {

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MCT_BACKEND_PROJECT.Models;
-using MCT_BACKEND_PROJECT.Repositories;
+using Spellen.API.Models;
+using Spellen.API.Repositories;
 
-namespace MCT_BACKEND_PROJECT.Services
+namespace Spellen.API.Services
 {
     public interface ISpellenService
     {

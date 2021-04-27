@@ -1,12 +1,12 @@
 using System.Threading;
 using System;
 using Microsoft.EntityFrameworkCore;
-using MCT_BACKEND_PROJECT.Configuration;
+using Spellen.API.Configuration;
 using Microsoft.Extensions.Options;
-using MCT_BACKEND_PROJECT.Models;
+using Spellen.API.Models;
 using System.Threading.Tasks;
 
-namespace MCT_BACKEND_PROJECT.Data
+namespace Spellen.API.Data
 {
     public interface ISpellenContext
     {

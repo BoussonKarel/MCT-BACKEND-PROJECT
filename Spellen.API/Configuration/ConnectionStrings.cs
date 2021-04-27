@@ -1,6 +1,6 @@
 using System;
 
-namespace MCT_BACKEND_PROJECT.Configuration
+namespace Spellen.API.Configuration
 {
     public class ConnectionStrings
     {

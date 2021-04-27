@@ -12,16 +12,16 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["MCT-BACKEND-PROJECT.csproj", "./"]
-RUN dotnet restore "MCT-BACKEND-PROJECT.csproj"
+COPY ["Spellen.API.csproj", "./"]
+RUN dotnet restore "Spellen.API.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "MCT-BACKEND-PROJECT.csproj" -c Release -o /app/build
+RUN dotnet build "Spellen.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MCT-BACKEND-PROJECT.csproj" -c Release -o /app/publish
+RUN dotnet publish "Spellen.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MCT-BACKEND-PROJECT.dll"]
+ENTRYPOINT ["dotnet", "Spellen.API.dll"]

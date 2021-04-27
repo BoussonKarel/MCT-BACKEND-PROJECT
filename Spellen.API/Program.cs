@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MCT_BACKEND_PROJECT
+namespace Spellen.API
 {
     public class Program
     {

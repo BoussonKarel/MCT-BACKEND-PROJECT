@@ -1,6 +1,6 @@
 using System;
 
-namespace MCT_BACKEND_PROJECT.Repositories
+namespace Spellen.API.Repositories
 {
     public class CategorieRepository
     {

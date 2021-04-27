@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MCT_BACKEND_PROJECT.Models;
-using MCT_BACKEND_PROJECT.Services;
+using Spellen.API.Models;
+using Spellen.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace MCT_BACKEND_PROJECT.Controllers
+namespace Spellen.API.Controllers
 {
     [ApiController]
     [Route("api")]
