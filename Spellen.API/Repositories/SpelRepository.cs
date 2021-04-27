@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MCT_BACKEND_PROJECT.Data;
-using MCT_BACKEND_PROJECT.Models;
+using Spellen.API.Data;
+using Spellen.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Spellen.API.Repositories
