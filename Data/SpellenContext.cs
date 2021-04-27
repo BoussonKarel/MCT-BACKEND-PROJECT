@@ -51,7 +51,7 @@ namespace MCT_BACKEND_PROJECT.Data
             // .WithMany(s => s.VariCombis);
             // GEEFT ERRORS
 
-            // Default waardes
+            // Dummy data
         }
     }
 }

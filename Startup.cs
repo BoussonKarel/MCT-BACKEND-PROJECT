@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MCT_BACKEND_PROJECT.Data;
+using MCT_BACKEND_PROJECT.Repositories;
 
 namespace MCT_BACKEND_PROJECT
 {
@@ -38,6 +39,8 @@ namespace MCT_BACKEND_PROJECT
 
             // Context
             services.AddTransient<ISpellenContext,SpellenContext>();
+            // Repositories
+            services.AddTransient<ISpelRepository, SpelRepository>();
 
             services.AddSwaggerGen(c =>
             {
