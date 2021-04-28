@@ -22,7 +22,12 @@ namespace Spellen.API.Repositories
 
         public async Task<List<Spel>> GetSpellen()
         {
-            return await _context.Spellen.Include(s => s.Materiaal).ToListAsync();
+            try {
+                return await _context.Spellen.Include(s => s.Categorieen).Include(s => s.Materiaal).ToListAsync();
+            }
+            catch(Exception ex) {
+                throw(ex);
+            }
         }
     }
 }

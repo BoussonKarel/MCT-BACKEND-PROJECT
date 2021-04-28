@@ -30,7 +30,31 @@ namespace Spellen.API.Controllers
                 return new OkObjectResult(await _spellenService.GetSpellen());
             }
             catch(Exception ex) {
-                return new BadRequestObjectResult(ex);
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("materiaal")]
+        public async Task<ActionResult<List<Materiaal>>> GetMateriaal()
+        {
+            try {
+                return new OkObjectResult(await _spellenService.GetMateriaal());
+            }
+            catch(Exception ex) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("categorieen")]
+        public async Task<ActionResult<List<Categorie>>> GetCategorieen()
+        {
+            try {
+                return new OkObjectResult(await _spellenService.GetCategorieen());
+            }
+            catch(Exception ex) {
+                return new StatusCodeResult(500);
             }
         }
     }

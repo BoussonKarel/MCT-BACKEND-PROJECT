@@ -34,7 +34,7 @@ namespace Spellen.API
             // Configuratie voor connection strings
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
-            // Context
+            // EF Core: Context
             services.AddDbContext<SpellenContext>();
 
             services.AddControllers();
@@ -54,6 +54,8 @@ namespace Spellen.API
             services.AddTransient<ISpellenContext,SpellenContext>();
             // Repositories
             services.AddTransient<ISpelRepository, SpelRepository>();
+            services.AddTransient<IMateriaalRepository, MateriaalRepository>();
+            services.AddTransient<ICategorieRepository, CategorieRepository>();
             // Services
             services.AddTransient<ISpellenService, SpellenService>();
 

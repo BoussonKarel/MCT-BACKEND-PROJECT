@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Spellen.API.Configuration;
 using Spellen.API.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Spellen.API.Data
 {
@@ -40,6 +42,27 @@ namespace Spellen.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // ---------------
+            // INSTELLINGEN
+            // ---------------
+            // SPEL.TERREIN
+            // List<string> is niet toegelaten bij EF core,
+            // dus slaan we het op als 1 string met een separator
+            modelBuilder.Entity<Spel>()
+            .Property(s => s.Terrein)
+            .HasConversion(
+                v => string.Join(',', v), // Convert TO (string)
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList(), // Convert FROM (string)
+                new ValueComparer<List<string>>(
+                    (c1, c2) => c1.SequenceEqual(c2), // Zijn de lists gelijk?
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())), // Hash code genereren
+                    c => c.ToList() // Expressie om snapshot te maken van een value
+                )
+            );
+
+            // MATERIAALSPEL & CATEGORIESPEL
+            // Samengestelde sleutels moeten in OnModelCreating worden gedefinieerd
+
             // modelBuilder.Entity<MateriaalSpel>()
             // .HasKey(ms => new { ms.MateriaalId, ms.SpelId });
 
@@ -47,37 +70,35 @@ namespace Spellen.API.Data
             // .HasKey(cs => new { cs.CategorieId, cs.SpelId });
 
 
-            // Relatie van VariCombis proberen leggen
+            // VARICOMBI
+            // Deze relatie is lastiger te leggen
             // modelBuilder.Entity<VariCombi>()
             // .HasMany(v => v.SpelId1)
             // .WithMany(s => s.VariCombis);
             // GEEFT ERRORS
 
-            // --- SEEDING ---
-
+            // ---------------
+            // SEEDING
+            // ---------------
             // CATEGORIEEN
-            Categorie catPleinspelen = new Categorie()
-            {
-                CategorieId = Guid.NewGuid(),
-                Naam = "Pleinspelen"
-            };
-            Categorie catVerstoppen = new Categorie() {
-                CategorieId = Guid.NewGuid(),
-                Naam = "Verstoppen"
-            };
             modelBuilder.Entity<Categorie>().HasData(
-                catPleinspelen,
-                catVerstoppen
+                new Categorie()
+                {
+                    CategorieId = Guid.NewGuid(),
+                    Naam = "Pleinspelen"
+                },
+                new Categorie() {
+                    CategorieId = Guid.NewGuid(),
+                    Naam = "Verstoppen"
+                }
             );
 
             // MATERIAAL
-            Materiaal matPotje = new Materiaal()
-            {
-                MateriaalId = Guid.NewGuid(),
-                Item = "Potjes",
-            };
             modelBuilder.Entity<Materiaal>().HasData(
-                matPotje
+                new Materiaal() {
+                    MateriaalId = Guid.NewGuid(),
+                    Item = "Potjes",
+                }
             );
 
             // SPELLEN
@@ -105,22 +126,6 @@ namespace Spellen.API.Data
                     Spelers_max = 99,
                 }
             );
-
-            // MATERIAALSPEL
-            // modelBuilder.Entity<MateriaalSpel>().HasData(
-            //     new MateriaalSpel() {
-            //         MateriaalId = matPotje.MateriaalId,
-            //         SpelId = spTussenTweeVuren.SpelId
-            //     }
-            // );
-
-            // CATEGORIESPEL
-            // modelBuilder.Entity<CategorieSpel>().HasData(
-            //     new CategorieSpel() {
-            //         CategorieId = catPleinspelen.CategorieId,
-            //         SpelId = spTussenTweeVuren.SpelId
-            //     }
-            // );
         }
     }
 }

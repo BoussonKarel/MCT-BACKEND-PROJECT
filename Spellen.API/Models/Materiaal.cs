@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Spellen.API.Models
 {
@@ -7,6 +8,7 @@ namespace Spellen.API.Models
     {
         public Guid MateriaalId { get; set; }
         public string Item { get; set; }
+        [JsonIgnore]
         public List<Spel> Spellen { get; set; }
     }
 }
