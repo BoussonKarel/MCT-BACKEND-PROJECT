@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Spellen.API.Data;
 using Spellen.API.Repositories;
+using Spellen.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Spellen.API
 {
@@ -37,10 +39,23 @@ namespace Spellen.API
 
             services.AddControllers();
 
+            // Auth0
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://karelb.eu.auth0.com/";
+                options.Audience = "http://SpellenAPI";
+            });
+
             // Context
             services.AddTransient<ISpellenContext,SpellenContext>();
             // Repositories
             services.AddTransient<ISpelRepository, SpelRepository>();
+            // Services
+            services.AddTransient<ISpellenService, SpellenService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -61,7 +76,7 @@ namespace Spellen.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

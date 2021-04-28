@@ -5,9 +5,11 @@ using Spellen.API.Models;
 using Spellen.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Spellen.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api")]
     public class SpellenController : ControllerBase
@@ -22,13 +24,13 @@ namespace Spellen.API.Controllers
 
         [HttpGet]
         [Route("spellen")]
-        public async Task<ActionResult<List<Spel>>> GetOccasions()
+        public async Task<ActionResult<List<Spel>>> GetSpellen()
         {
             try {
                 return new OkObjectResult(await _spellenService.GetSpellen());
             }
             catch(Exception ex) {
-                return new StatusCodeResult(500);
+                return new BadRequestObjectResult(ex);
             }
         }
     }

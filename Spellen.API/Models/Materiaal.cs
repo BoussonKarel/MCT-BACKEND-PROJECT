@@ -7,6 +7,6 @@ namespace Spellen.API.Models
     {
         public Guid MateriaalId { get; set; }
         public string Item { get; set; }
-        public List<SpelMateriaal> Spellen { get; set; }
+        public List<Spel> Spellen { get; set; }
     }
 }
