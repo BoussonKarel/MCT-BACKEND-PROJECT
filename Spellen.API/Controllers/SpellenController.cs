@@ -23,11 +23,16 @@ namespace Spellen.API.Controllers
         }
 
         [HttpGet]
-        [Route("spellen")]
-        public async Task<ActionResult<List<Spel>>> GetSpellen()
-        {
+        [Route("games")]
+        public async Task<ActionResult<List<Game>>> GetGames(
+            string search = "",
+            string terrein = ""
+        ) {
             try {
-                return new OkObjectResult(await _spellenService.GetSpellen());
+                if (string.IsNullOrWhiteSpace(search))
+                    return new OkObjectResult(await _spellenService.GetSpellen());
+                else
+                    return new OkObjectResult(await _spellenService.SearchForSpellen(search));
             }
             catch(Exception ex) {
                 return new StatusCodeResult(500);
@@ -35,8 +40,8 @@ namespace Spellen.API.Controllers
         }
 
         [HttpGet]
-        [Route("materiaal")]
-        public async Task<ActionResult<List<Materiaal>>> GetMateriaal()
+        [Route("items")]
+        public async Task<ActionResult<List<Item>>> GetItems()
         {
             try {
                 return new OkObjectResult(await _spellenService.GetMateriaal());
@@ -47,8 +52,8 @@ namespace Spellen.API.Controllers
         }
 
         [HttpGet]
-        [Route("categorieen")]
-        public async Task<ActionResult<List<Categorie>>> GetCategorieen()
+        [Route("categories")]
+        public async Task<ActionResult<List<Category>>> GetCategories()
         {
             try {
                 return new OkObjectResult(await _spellenService.GetCategorieen());
