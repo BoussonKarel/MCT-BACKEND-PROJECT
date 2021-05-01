@@ -10,12 +10,15 @@ namespace Spellen.API.Services
 {
     public interface IGameService
     {
-        Task<Game> AddGame(GameDTO game);
+        Task<Game> AddGame(GameAddDTO game);
+        Task DeleteGame(Guid gameId);
         Task<List<Category>> GetCategories();
+        Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
+        Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
         Task<Game> GetGameById(Guid gameId);
         Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
         Task<List<Item>> GetItems();
-        Task<Game> UpdateGame(GameDTO game);
+        Task UpdateGame(GameUpdateDTO game);
     }
 
     public class GameService : IGameService
@@ -43,9 +46,8 @@ namespace Spellen.API.Services
             return await _gameRepository.GetGames(searchQuery, ageFrom, ageTo, playersMin, playersMax);
         }
 
-        public async Task<Game> AddGame(GameDTO game)
+        public async Task<Game> AddGame(GameAddDTO game)
         {
-            Console.WriteLine(_mapper);
             Game newGame = _mapper.Map<Game>(game);
 
             newGame.GameCategories = new List<GameCategory>();
@@ -54,18 +56,24 @@ namespace Spellen.API.Services
                 newGame.GameCategories.Add(new GameCategory() { CategoryId = cat.CategoryId });
             }
 
+            newGame.GameItems = new List<GameItem>();
+            foreach (ItemDTO item in game.Items)
+            {
+                newGame.GameItems.Add(new GameItem() { ItemId = item.ItemId });
+            }
+
             return await _gameRepository.AddGame(newGame);
         }
 
-        public async Task<Game> UpdateGame(GameDTO game)
+        public async Task UpdateGame(GameUpdateDTO game) // Update de game, zonder zijn relaties
         {
-            Game updatedGame = _mapper.Map<Game>(game);
+            Game gameToUpdate = _mapper.Map<Game>(game);
+            await _gameRepository.UpdateGame(gameToUpdate);
+        }
 
-            // Update categories
-
-            // Update items
-
-            return await _gameRepository.UpdateGame(updatedGame);
+        public async Task DeleteGame(Guid gameId)
+        {
+            await _gameRepository.DeleteGame(gameId);
         }
 
         public async Task<List<Item>> GetItems()
@@ -76,6 +84,16 @@ namespace Spellen.API.Services
         public async Task<List<Category>> GetCategories()
         {
             return await _categoryRepository.GetCategories();
+        }
+
+        public async Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId)
+        {
+            return await _categoryRepository.GetCategoriesOfGame(gameId);
+        }
+
+        public async Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories)
+        {
+            return await _categoryRepository.UpdateCategoriesOfGame(gameId, categories);
         }
     }
 }

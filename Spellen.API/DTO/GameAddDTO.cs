@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Spellen.API.Models;
 
 namespace Spellen.API.DTO
 {
-    public class GameDTO
+    public class GameAddDTO
     {
         public Guid GameId { get; set; }
         public string Name { get; set; }
@@ -19,8 +20,7 @@ namespace Spellen.API.DTO
         public int PlayersMin { get; set; }
         [JsonPropertyName("players_max")]
         public int PlayersMax { get; set; }
-        public List<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
-        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
-        public List<VariCombiDTO> VariCombis { get; set; } = new List<VariCombiDTO>();
+        public List<CategoryDTO> Categories { get; set; }
+        public List<ItemDTO> Items { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace Spellen.API.Controllers
 
         [HttpPost]
         [Route("games")]
-        public async Task<ActionResult<Game>> AddGame(GameDTO game) {
+        public async Task<ActionResult<Game>> AddGame(GameAddDTO game) {
             try {
                 return await _gameService.AddGame(game);
             }
@@ -65,9 +65,24 @@ namespace Spellen.API.Controllers
 
         [HttpPut]
         [Route("games")]
-        public async Task<ActionResult<Game>> UpdateGame(GameDTO game) {
+        public async Task<ActionResult<GameUpdateDTO>> UpdateGame(GameUpdateDTO game) {
             try {
-                return await _gameService.UpdateGame(game);
+                // Update met gameUpdateDTO (game zonder de relaties)
+                await _gameService.UpdateGame(game);
+                return game;
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpDelete]
+        [Route("games/{gameId}")]
+        public async Task<ActionResult<GameUpdateDTO>> DeleteGame(Guid gameId) {
+            try {
+                // Update met gameUpdateDTO (game zonder de relaties)
+                await _gameService.DeleteGame(gameId);
+                return Ok();
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -92,6 +107,28 @@ namespace Spellen.API.Controllers
         {
             try {
                 return new OkObjectResult(await _gameService.GetCategories());
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("games/{gameId}/categories")]
+        public async Task<ActionResult<GameCategory>> GetCategoriesOfGame(Guid gameId) {
+            try {
+                return new OkObjectResult(await _gameService.GetCategoriesOfGame(gameId));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPut]
+        [Route("games/{gameId}/categories")]
+        public async Task<ActionResult<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories) {
+            try {
+                return new OkObjectResult(await _gameService.UpdateCategoriesOfGame(gameId, categories));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

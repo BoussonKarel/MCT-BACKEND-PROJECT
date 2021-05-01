@@ -12,10 +12,11 @@ namespace Spellen.API.Repositories
 {
     public interface IGameRepository
     {
+        Task<Game> AddGame(Game game);
         Task<Game> GetGameById(Guid gameId);
         Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
-        Task<Game> AddGame(Game game);
-        Task<Game> UpdateGame(Game game);
+        Task UpdateGame(Game game);
+        Task DeleteGame(Guid gameId);
     }
 
     public class GameRepository : IGameRepository
@@ -38,7 +39,8 @@ namespace Spellen.API.Repositories
             int? playersMin = null,
             int? playersMax = null,
             Guid? categoryId = null
-        ) {
+        )
+        {
             // STANDAARD QUERY
             IQueryable<Game> gamesQuery = _context.Games
             .Include(g => g.GameCategories)
@@ -72,23 +74,31 @@ namespace Spellen.API.Repositories
             return await gamesQuery.ToListAsync();
         }
 
-        public async Task<Game> AddGame(Game game) {
+        public async Task<Game> AddGame(Game game)
+        {
             _context.Games.Add(game);
             int changes = await _context.SaveChangesAsync();
-            if (changes > 0) {
+            if (changes > 0)
+            {
                 return game;
-            } else {
+            }
+            else
+            {
                 throw new Exception("Game not saved.");
             }
         }
 
-        public async Task<Game> UpdateGame(Game game) {
-            _context.Games.Update(game); // Moet geen await??
-            int changes = await _context.SaveChangesAsync();
-            if (changes > 0) {
-                return game;
-            } else {
-                throw new Exception("Game not updated.");
+        public async Task UpdateGame(Game game)
+        {
+            _context.Games.Update(game); // Update de game
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteGame(Guid gameId) {
+            Game game = await _context.Games.Where(g => g.GameId == gameId).SingleOrDefaultAsync();
+            if (game != null) {
+                _context.Games.Remove(game);
+                await _context.SaveChangesAsync();
             }
         }
     }
