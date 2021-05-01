@@ -6,6 +6,7 @@ using Spellen.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using Spellen.API.DTO;
 
 namespace Spellen.API.Controllers
 {
@@ -40,11 +41,33 @@ namespace Spellen.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("games/{gameId}")]
+        public async Task<ActionResult<Game>> GetGameById(Guid gameId) {
+            try {
+                return new OkObjectResult(await _gameService.GetGameById(gameId));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [HttpPost]
         [Route("games")]
-        public async Task<ActionResult<Game>> AddGame(Game game) {
+        public async Task<ActionResult<Game>> AddGame(GameDTO game) {
             try {
                 return await _gameService.AddGame(game);
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPut]
+        [Route("games")]
+        public async Task<ActionResult<Game>> UpdateGame(GameDTO game) {
+            try {
+                return await _gameService.UpdateGame(game);
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

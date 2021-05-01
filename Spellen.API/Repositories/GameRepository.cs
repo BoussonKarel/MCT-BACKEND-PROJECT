@@ -6,6 +6,7 @@ using Spellen.API.Data;
 using Spellen.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Spellen.API.DTO;
 
 namespace Spellen.API.Repositories
 {
@@ -14,6 +15,7 @@ namespace Spellen.API.Repositories
         Task<Game> GetGameById(Guid gameId);
         Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
         Task<Game> AddGame(Game game);
+        Task<Game> UpdateGame(Game game);
     }
 
     public class GameRepository : IGameRepository
@@ -26,7 +28,7 @@ namespace Spellen.API.Repositories
 
         public async Task<Game> GetGameById(Guid gameId)
         {
-            return await _context.Games.Where(g => g.GameId == gameId).SingleOrDefaultAsync();
+            return await _context.Games.Where(g => g.GameId == gameId).Include(g => g.GameCategories).ThenInclude(cg => cg.Category).Include(g => g.GameItems).ThenInclude(ig => ig.Item).SingleOrDefaultAsync();
         }
 
         public async Task<List<Game>> GetGames(
@@ -38,45 +40,55 @@ namespace Spellen.API.Repositories
             Guid? categoryId = null
         ) {
             // STANDAARD QUERY
-            IQueryable<Game> games = _context.Games
-            .Include(g => g.Categories)
+            IQueryable<Game> gamesQuery = _context.Games
+            .Include(g => g.GameCategories)
             .ThenInclude(cg => cg.Category)
-            .Include(g => g.Items)
+            .Include(g => g.GameItems)
             .ThenInclude(ig => ig.Item);
 
             // ZOEKTERM
             if (!string.IsNullOrWhiteSpace(searchQuery))
-                games = games.Where(g =>
+                gamesQuery = gamesQuery.Where(g =>
                     g.Name.ToLower().Contains(searchQuery.Trim().ToLower()) // Zit het zoekwoord in de naam
                     || g.Explanation.ToLower().Contains(searchQuery.Trim().ToLower()) // of in de uitleg)
                 );
 
             // LEEFTIJD
             if (ageFrom != null)
-                games = games.Where(g => g.AgeFrom >= ageFrom);
+                gamesQuery = gamesQuery.Where(g => g.AgeFrom >= ageFrom);
             if (ageTo != null)
-                games = games.Where(g => g.AgeTo <= ageTo);
+                gamesQuery = gamesQuery.Where(g => g.AgeTo <= ageTo);
 
             // SPELERS
             if (playersMin != null)
-                games = games.Where(g => g.PlayersMin >= playersMin);
+                gamesQuery = gamesQuery.Where(g => g.PlayersMin >= playersMin);
             if (playersMax != null)
-                games = games.Where(g => g.PlayersMax <= playersMax);
+                gamesQuery = gamesQuery.Where(g => g.PlayersMax <= playersMax);
 
             // CATEGORIE
             if (categoryId != null)
-                games.Where(g => g.Categories.Where(c => c.CategoryId == categoryId).Count() > 0);
+                gamesQuery.Where(g => g.GameCategories.Where(c => c.CategoryId == categoryId).Count() > 0);
 
-            return await games.ToListAsync();
+            return await gamesQuery.ToListAsync();
         }
 
         public async Task<Game> AddGame(Game game) {
-            await _context.Games.AddAsync(game);
+            _context.Games.Add(game);
             int changes = await _context.SaveChangesAsync();
             if (changes > 0) {
                 return game;
             } else {
                 throw new Exception("Game not saved.");
+            }
+        }
+
+        public async Task<Game> UpdateGame(Game game) {
+            _context.Games.Update(game); // Moet geen await??
+            int changes = await _context.SaveChangesAsync();
+            if (changes > 0) {
+                return game;
+            } else {
+                throw new Exception("Game not updated.");
             }
         }
     }

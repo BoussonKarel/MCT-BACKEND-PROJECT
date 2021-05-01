@@ -17,9 +17,9 @@ namespace Spellen.API.Data
         DbSet<Item> Items { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<VariCombi> VariCombis { get; set; }
-        DbSet<CategoryGame> CategoryGame { get; set; }
-        DbSet<ItemGame> ItemGame { get; set; }
-        DbSet<VariCombiGame> VariCombiGame { get; set; }
+        DbSet<GameCategory> GameCategories { get; set; }
+        DbSet<GameItem> GameItems { get; set; }
+        DbSet<GameVariCombi> GameVariCombis { get; set; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
@@ -30,9 +30,9 @@ namespace Spellen.API.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<VariCombi> VariCombis { get; set; }
-        public DbSet<CategoryGame> CategoryGame { get; set; }
-        public DbSet<ItemGame> ItemGame { get; set; }
-        public DbSet<VariCombiGame> VariCombiGame { get; set; }
+        public DbSet<GameCategory> GameCategories { get; set; }
+        public DbSet<GameItem> GameItems { get; set; }
+        public DbSet<GameVariCombi> GameVariCombis { get; set; }
 
         public ConnectionStrings _connectionStrings;
 
@@ -52,13 +52,13 @@ namespace Spellen.API.Data
             // ---------------
             // INSTELLINGEN
             // ---------------
-            modelBuilder.Entity<CategoryGame>()
+            modelBuilder.Entity<GameCategory>()
             .HasKey(cs => new { cs.CategoryId, cs.GameId });
 
-            modelBuilder.Entity<ItemGame>()
+            modelBuilder.Entity<GameItem>()
             .HasKey(cs => new { cs.ItemId, cs.GameId });
 
-            modelBuilder.Entity<VariCombiGame>()
+            modelBuilder.Entity<GameVariCombi>()
             .HasKey(cs => new { cs.VariCombiId, cs.GameId });
 
             // SPEL.TERREIN

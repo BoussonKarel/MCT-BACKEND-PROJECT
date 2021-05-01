@@ -9,6 +9,6 @@ namespace Spellen.API.Models
         public Guid ItemId { get; set; }
         public string Name { get; set; }
         [JsonIgnore]
-        public List<ItemGame> Games { get; set; }
+        public List<GameItem> GameItems { get; set; }
     }
 }

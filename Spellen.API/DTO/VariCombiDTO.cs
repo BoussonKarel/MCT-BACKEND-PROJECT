@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Spellen.API.Models
+namespace Spellen.API.DTO
 {
-    public class VariCombi
+    public class VariCombiDTO
     {
         public Guid VariCombiId { get; set; }
-        public List<GameVariCombi> GameVariCombis { get; set; }
+        public List<GameDTO> Games { get; set; }
         public string Explanation { get; set; }
     }
 }

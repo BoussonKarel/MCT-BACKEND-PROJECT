@@ -3,10 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace Spellen.API.Models
 {
-    public class ItemGame
+    public class GameCategory
     {
-        public Guid ItemId { get; set; }
-        public Item Item { get; set; }
+        public Guid CategoryId { get; set; }
+
+        public Category Category { get; set; }
         [JsonIgnore]
         public Guid GameId { get; set; }
     }
