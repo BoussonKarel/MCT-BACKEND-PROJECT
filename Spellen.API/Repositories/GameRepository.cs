@@ -13,6 +13,7 @@ namespace Spellen.API.Repositories
     {
         Task<Game> GetGameById(Guid gameId);
         Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
+        Task<Game> AddGame(Game game);
     }
 
     public class GameRepository : IGameRepository
@@ -37,7 +38,11 @@ namespace Spellen.API.Repositories
             Guid? categoryId = null
         ) {
             // STANDAARD QUERY
-            IQueryable<Game> games = _context.Games.Include(g => g.Categories).Include(g => g.Items);
+            IQueryable<Game> games = _context.Games
+            .Include(g => g.Categories)
+            .ThenInclude(cg => cg.Category)
+            .Include(g => g.Items)
+            .ThenInclude(ig => ig.Item);
 
             // ZOEKTERM
             if (!string.IsNullOrWhiteSpace(searchQuery))
@@ -63,6 +68,16 @@ namespace Spellen.API.Repositories
                 games.Where(g => g.Categories.Where(c => c.CategoryId == categoryId).Count() > 0);
 
             return await games.ToListAsync();
+        }
+
+        public async Task<Game> AddGame(Game game) {
+            await _context.Games.AddAsync(game);
+            int changes = await _context.SaveChangesAsync();
+            if (changes > 0) {
+                return game;
+            } else {
+                throw new Exception("Game not saved.");
+            }
         }
     }
 }

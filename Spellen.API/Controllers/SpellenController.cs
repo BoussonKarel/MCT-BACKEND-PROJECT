@@ -35,7 +35,18 @@ namespace Spellen.API.Controllers
                 else
                     return new OkObjectResult(await _gameService.GetGames(searchQuery: search, categoryId: categoryId));
             }
-            catch(Exception ex) {
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("games")]
+        public async Task<ActionResult<Game>> AddGame(Game game) {
+            try {
+                return await _gameService.AddGame(game);
+            }
+            catch(Exception) {
                 return new StatusCodeResult(500);
             }
         }
@@ -47,7 +58,7 @@ namespace Spellen.API.Controllers
             try {
                 return new OkObjectResult(await _gameService.GetItems());
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 return new StatusCodeResult(500);
             }
         }
@@ -59,7 +70,7 @@ namespace Spellen.API.Controllers
             try {
                 return new OkObjectResult(await _gameService.GetCategories());
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 return new StatusCodeResult(500);
             }
         }

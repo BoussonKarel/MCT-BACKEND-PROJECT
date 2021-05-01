@@ -19,8 +19,9 @@ namespace Spellen.API.Models
         public int PlayersMin { get; set; }
         [JsonPropertyName("players_max")]
         public int PlayersMax { get; set; }
-        public List<Category> Categories { get; set; }
-        public List<Item> Items { get; set; }
-        public List<VariCombi> VariCombis { get; set; }
+        public List<CategoryGame> Categories { get; set; }
+        public List<ItemGame> Items { get; set; }
+        [JsonIgnore]
+        public List<VariCombiGame> VariCombis { get; set; }
     }
 }

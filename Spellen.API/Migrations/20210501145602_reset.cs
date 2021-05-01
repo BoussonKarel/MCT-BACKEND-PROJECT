@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Spellen.API.Migrations
 {
-    public partial class first : Migration
+    public partial class reset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -66,69 +66,69 @@ namespace Spellen.API.Migrations
                 name: "CategoryGame",
                 columns: table => new
                 {
-                    CategoriesCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GamesGameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryGame", x => new { x.CategoriesCategoryId, x.GamesGameId });
+                    table.PrimaryKey("PK_CategoryGame", x => new { x.CategoryId, x.GameId });
                     table.ForeignKey(
-                        name: "FK_CategoryGame_Categories_CategoriesCategoryId",
-                        column: x => x.CategoriesCategoryId,
+                        name: "FK_CategoryGame_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CategoryGame_Games_GamesGameId",
-                        column: x => x.GamesGameId,
+                        name: "FK_CategoryGame_Games_GameId",
+                        column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameItem",
+                name: "ItemGame",
                 columns: table => new
                 {
-                    GamesGameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemsItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameItem", x => new { x.GamesGameId, x.ItemsItemId });
+                    table.PrimaryKey("PK_ItemGame", x => new { x.ItemId, x.GameId });
                     table.ForeignKey(
-                        name: "FK_GameItem_Games_GamesGameId",
-                        column: x => x.GamesGameId,
+                        name: "FK_ItemGame_Games_GameId",
+                        column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameItem_Items_ItemsItemId",
-                        column: x => x.ItemsItemId,
+                        name: "FK_ItemGame_Items_ItemId",
+                        column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "ItemId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameVariCombi",
+                name: "VariCombiGame",
                 columns: table => new
                 {
-                    GamesGameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VariCombisVariCombiId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    VariCombiId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameVariCombi", x => new { x.GamesGameId, x.VariCombisVariCombiId });
+                    table.PrimaryKey("PK_VariCombiGame", x => new { x.VariCombiId, x.GameId });
                     table.ForeignKey(
-                        name: "FK_GameVariCombi_Games_GamesGameId",
-                        column: x => x.GamesGameId,
+                        name: "FK_VariCombiGame_Games_GameId",
+                        column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameVariCombi_VariCombis_VariCombisVariCombiId",
-                        column: x => x.VariCombisVariCombiId,
+                        name: "FK_VariCombiGame_VariCombis_VariCombiId",
+                        column: x => x.VariCombiId,
                         principalTable: "VariCombis",
                         principalColumn: "VariCombiId",
                         onDelete: ReferentialAction.Cascade);
@@ -154,19 +154,19 @@ namespace Spellen.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryGame_GamesGameId",
+                name: "IX_CategoryGame_GameId",
                 table: "CategoryGame",
-                column: "GamesGameId");
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameItem_ItemsItemId",
-                table: "GameItem",
-                column: "ItemsItemId");
+                name: "IX_ItemGame_GameId",
+                table: "ItemGame",
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameVariCombi_VariCombisVariCombiId",
-                table: "GameVariCombi",
-                column: "VariCombisVariCombiId");
+                name: "IX_VariCombiGame_GameId",
+                table: "VariCombiGame",
+                column: "GameId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -175,10 +175,10 @@ namespace Spellen.API.Migrations
                 name: "CategoryGame");
 
             migrationBuilder.DropTable(
-                name: "GameItem");
+                name: "ItemGame");
 
             migrationBuilder.DropTable(
-                name: "GameVariCombi");
+                name: "VariCombiGame");
 
             migrationBuilder.DropTable(
                 name: "Categories");

@@ -10,8 +10,8 @@ using Spellen.API.Data;
 namespace Spellen.API.Migrations
 {
     [DbContext(typeof(GameContext))]
-    [Migration("20210501135428_first")]
-    partial class first
+    [Migration("20210501145602_reset")]
+    partial class reset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,51 +20,6 @@ namespace Spellen.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CategoryGame", b =>
-                {
-                    b.Property<Guid>("CategoriesCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("GamesGameId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CategoriesCategoryId", "GamesGameId");
-
-                    b.HasIndex("GamesGameId");
-
-                    b.ToTable("CategoryGame");
-                });
-
-            modelBuilder.Entity("GameItem", b =>
-                {
-                    b.Property<Guid>("GamesGameId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ItemsItemId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("GamesGameId", "ItemsItemId");
-
-                    b.HasIndex("ItemsItemId");
-
-                    b.ToTable("GameItem");
-                });
-
-            modelBuilder.Entity("GameVariCombi", b =>
-                {
-                    b.Property<Guid>("GamesGameId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VariCombisVariCombiId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("GamesGameId", "VariCombisVariCombiId");
-
-                    b.HasIndex("VariCombisVariCombiId");
-
-                    b.ToTable("GameVariCombi");
-                });
 
             modelBuilder.Entity("Spellen.API.Models.Category", b =>
                 {
@@ -95,6 +50,21 @@ namespace Spellen.API.Migrations
                             CategoryId = new Guid("cc78fbbb-a46b-437e-8978-ae20d9243a29"),
                             Name = "Tikken / Tikkertje"
                         });
+                });
+
+            modelBuilder.Entity("Spellen.API.Models.CategoryGame", b =>
+                {
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CategoryId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("CategoryGame");
                 });
 
             modelBuilder.Entity("Spellen.API.Models.Game", b =>
@@ -158,6 +128,21 @@ namespace Spellen.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Spellen.API.Models.ItemGame", b =>
+                {
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ItemId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("ItemGame");
+                });
+
             modelBuilder.Entity("Spellen.API.Models.VariCombi", b =>
                 {
                     b.Property<Guid>("VariCombiId")
@@ -172,49 +157,88 @@ namespace Spellen.API.Migrations
                     b.ToTable("VariCombis");
                 });
 
-            modelBuilder.Entity("CategoryGame", b =>
+            modelBuilder.Entity("Spellen.API.Models.VariCombiGame", b =>
+                {
+                    b.Property<Guid>("VariCombiId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("VariCombiId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("VariCombiGame");
+                });
+
+            modelBuilder.Entity("Spellen.API.Models.CategoryGame", b =>
                 {
                     b.HasOne("Spellen.API.Models.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesCategoryId")
+                        .WithMany("Games")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Spellen.API.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesGameId")
+                        .WithMany("Categories")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameItem", b =>
+            modelBuilder.Entity("Spellen.API.Models.ItemGame", b =>
                 {
                     b.HasOne("Spellen.API.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesGameId")
+                        .WithMany("Items")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Spellen.API.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsItemId")
+                        .WithMany("Games")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameVariCombi", b =>
+            modelBuilder.Entity("Spellen.API.Models.VariCombiGame", b =>
                 {
                     b.HasOne("Spellen.API.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesGameId")
+                        .WithMany("VariCombis")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Spellen.API.Models.VariCombi", null)
-                        .WithMany()
-                        .HasForeignKey("VariCombisVariCombiId")
+                        .WithMany("Games")
+                        .HasForeignKey("VariCombiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Spellen.API.Models.Category", b =>
+                {
+                    b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("Spellen.API.Models.Game", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Items");
+
+                    b.Navigation("VariCombis");
+                });
+
+            modelBuilder.Entity("Spellen.API.Models.Item", b =>
+                {
+                    b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("Spellen.API.Models.VariCombi", b =>
+                {
+                    b.Navigation("Games");
                 });
 #pragma warning restore 612, 618
         }

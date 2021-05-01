@@ -11,6 +11,7 @@ namespace Spellen.API.Services
         Task<List<Category>> GetCategories();
         Task<Game> GetGameById(Guid gameId);
         Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
+        Task<Game> AddGame(Game game);
         Task<List<Item>> GetItems();
     }
 
@@ -35,6 +36,10 @@ namespace Spellen.API.Services
         public async Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null)
         {
             return await _gameRepository.GetGames(searchQuery, ageFrom, ageTo, playersMin, playersMax);
+        }
+
+        public async Task<Game> AddGame(Game game) {
+            return await _gameRepository.AddGame(game);
         }
 
         public async Task<List<Item>> GetItems()

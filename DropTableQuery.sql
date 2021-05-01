@@ -6,12 +6,12 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Categ
 DROP TABLE [dbo].[CategoryGame]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GameItem]') AND type in (N'U'))
-DROP TABLE [dbo].[GameItem]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ItemGame]') AND type in (N'U'))
+DROP TABLE [dbo].[ItemGame]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GameVariCombi]') AND type in (N'U'))
-DROP TABLE [dbo].[GameVariCombi]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[VariCombiGame]') AND type in (N'U'))
+DROP TABLE [dbo].[VariCombiGame]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Categories]') AND type in (N'U'))

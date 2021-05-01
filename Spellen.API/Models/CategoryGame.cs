@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Spellen.API.Models
 {
-    public class Category
+    public class CategoryGame
     {
         public Guid CategoryId { get; set; }
-        public string Name { get; set; }
+
+        public Category Category { get; set; }
         [JsonIgnore]
-        public List<CategoryGame> Games { get; set; }
+        public Guid GameId { get; set; }
     }
 }
