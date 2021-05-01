@@ -35,7 +35,7 @@ namespace Spellen.API
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
             // EF Core: Context
-            services.AddDbContext<SpellenContext>();
+            services.AddDbContext<GameContext>();
 
             services.AddControllers();
 
@@ -51,13 +51,13 @@ namespace Spellen.API
             });
 
             // Context
-            services.AddTransient<ISpellenContext,SpellenContext>();
+            services.AddTransient<IGameContext, GameContext>();
             // Repositories
-            services.AddTransient<ISpelRepository, SpelRepository>();
-            services.AddTransient<IMateriaalRepository, MateriaalRepository>();
-            services.AddTransient<ICategorieRepository, CategorieRepository>();
+            services.AddTransient<IGameRepository, GameRepository>();
+            services.AddTransient<IItemRepository, ItemRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
             // Services
-            services.AddTransient<ISpellenService, SpellenService>();
+            services.AddTransient<IGameService, GameService>();
 
             services.AddSwaggerGen(c =>
             {

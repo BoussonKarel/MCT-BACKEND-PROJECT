@@ -11,25 +11,26 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Spellen.API.Data
 {
-    public interface ISpellenContext
+    public interface IGameContext
     {
-        DbSet<Game> Spellen { get; set; }
-        DbSet<Item> Materiaal { get; set; }
-        DbSet<Category> Categorieen { get; set; }
+        DbSet<Game> Games { get; set; }
+        DbSet<Item> Items { get; set; }
+        DbSet<Category> Categories { get; set; }
+        DbSet<VariCombi> VariCombis { get; set; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
-    public class SpellenContext : DbContext, ISpellenContext
+    public class GameContext : DbContext, IGameContext
     {
-        public DbSet<Game> Spellen { get; set; }
-        public DbSet<Item> Materiaal { get; set; }
-        public DbSet<Category> Categorieen { get; set; }
-        // public DbSet<VariCombi> VariCombis { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<VariCombi> VariCombis { get; set; }
 
         public ConnectionStrings _connectionStrings;
 
-        public SpellenContext(DbContextOptions<SpellenContext> options, IOptions<ConnectionStrings> connectionStrings)
+        public GameContext(DbContextOptions<GameContext> options, IOptions<ConnectionStrings> connectionStrings)
             : base(options)
         {
             _connectionStrings = connectionStrings.Value;
@@ -73,8 +74,9 @@ namespace Spellen.API.Data
             // VARICOMBI
             // Deze relatie is lastiger te leggen
             // modelBuilder.Entity<VariCombi>()
-            // .HasMany(v => v.SpelId1)
-            // .WithMany(s => s.VariCombis);
+            // .HasMany(v => v.Games)
+            // .WithMany(g => g.VariCombis);
+
             // GEEFT ERRORS
 
             // ---------------
@@ -82,13 +84,12 @@ namespace Spellen.API.Data
             // ---------------
             // CATEGORIEEN
             modelBuilder.Entity<Category>().HasData(
-                new Category()
-                {
-                    CategoryId = Guid.NewGuid(),
+                new Category() {
+                    CategoryId = new Guid("f03502ed-f8c6-45d4-a283-62cd9a36865a"),
                     Name = "Pleinspelen"
                 },
                 new Category() {
-                    CategoryId = Guid.NewGuid(),
+                    CategoryId = new Guid("2d261a66-3fa0-4c5b-91fb-7ff75999733b"),
                     Name = "Verstoppen"
                 }
             );
@@ -96,7 +97,7 @@ namespace Spellen.API.Data
             // MATERIAAL
             modelBuilder.Entity<Item>().HasData(
                 new Item() {
-                    ItemId = Guid.NewGuid(),
+                    ItemId = new Guid("1f816b47-d874-4458-8acb-02812c8c4366"),
                     Name = "Potjes",
                 }
             );
@@ -104,7 +105,7 @@ namespace Spellen.API.Data
             // SPELLEN
             modelBuilder.Entity<Game>().HasData(
                 new Game(){
-                    GameId = Guid.NewGuid(),
+                    GameId = new Guid("5c501909-602a-4768-9362-3b7333d5374d"),
                     Name = "Tussen 2 vuren",
                     Explanation = "Tussen 2 vuren is een spel met twee teams en een bal en je gooit de andere eraan. En O ja, er is ook iets met een kapitein.",
                     Duration = "15 tot 30 minuten",
@@ -113,9 +114,21 @@ namespace Spellen.API.Data
                     AgeTo = 99,
                     PlayersMin = 6,
                     PlayersMax = 99,
+                    Categories = new List<Category>() {
+                        new Category() {
+                            CategoryId = new Guid("f03502ed-f8c6-45d4-a283-62cd9a36865a"),
+                            Name = "Pleinspelen"
+                        }
+                    },
+                    Items = new List<Item>() {
+                        new Item() {
+                            ItemId = new Guid("1f816b47-d874-4458-8acb-02812c8c4366"),
+                            Name = "Potjes",
+                        }
+                    }
                 },
                 new Game() {
-                    GameId = Guid.NewGuid(),
+                    GameId = new Guid("f740596e-90f4-4354-8e01-5aa1f76cd5be"),
                     Name = "Kiekeboe",
                     Explanation = "Kiekeboe is een verstopspel. Er is één zoeker die begint af te tellen vanaf 20. Binnen deze tijd moet iedereen zich verstopt hebben. De zoeker mag 3 stappen zetten en dan 'Kiekeboe' roepen, hij begint dan af te tellen vanaf 19, iedereen moet hem dan in die tijd aantikken en zich terug verstoppen... Wanneer je gevonden bent, mag je niet terug verstoppen.",
                     Duration = "5 tot 20 minuten",
@@ -124,6 +137,12 @@ namespace Spellen.API.Data
                     AgeTo = 99,
                     PlayersMin = 3,
                     PlayersMax = 99,
+                    Categories = new List<Category>() {
+                        new Category() {
+                            CategoryId = new Guid("2d261a66-3fa0-4c5b-91fb-7ff75999733b"),
+                            Name = "Verstoppen"
+                        }
+                    }
                 }
             );
         }

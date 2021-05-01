@@ -14,25 +14,26 @@ namespace Spellen.API.Controllers
     [Route("api")]
     public class SpellenController : ControllerBase
     {
-        private readonly ISpellenService _spellenService;
+        private readonly IGameService _gameService;
         private readonly ILogger<SpellenController> _logger;
-        public SpellenController(ILogger<SpellenController> logger, ISpellenService spellenService)
+        public SpellenController(ILogger<SpellenController> logger, IGameService gameService)
         {
             _logger = logger;
-            _spellenService = spellenService;
+            _gameService = gameService;
         }
 
         [HttpGet]
         [Route("games")]
         public async Task<ActionResult<List<Game>>> GetGames(
             string search = "",
-            string terrein = ""
+            string terrein = "",
+            Guid? categoryId = null
         ) {
             try {
                 if (string.IsNullOrWhiteSpace(search))
-                    return new OkObjectResult(await _spellenService.GetSpellen());
+                    return new OkObjectResult(await _gameService.GetGames());
                 else
-                    return new OkObjectResult(await _spellenService.SearchForSpellen(search));
+                    return new OkObjectResult(await _gameService.GetGames(searchQuery: search, categoryId: categoryId));
             }
             catch(Exception ex) {
                 return new StatusCodeResult(500);
@@ -44,7 +45,7 @@ namespace Spellen.API.Controllers
         public async Task<ActionResult<List<Item>>> GetItems()
         {
             try {
-                return new OkObjectResult(await _spellenService.GetMateriaal());
+                return new OkObjectResult(await _gameService.GetItems());
             }
             catch(Exception ex) {
                 return new StatusCodeResult(500);
@@ -56,7 +57,7 @@ namespace Spellen.API.Controllers
         public async Task<ActionResult<List<Category>>> GetCategories()
         {
             try {
-                return new OkObjectResult(await _spellenService.GetCategorieen());
+                return new OkObjectResult(await _gameService.GetCategories());
             }
             catch(Exception ex) {
                 return new StatusCodeResult(500);

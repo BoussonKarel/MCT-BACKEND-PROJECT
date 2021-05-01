@@ -21,5 +21,6 @@ namespace Spellen.API.Models
         public int PlayersMax { get; set; }
         public List<Category> Categories { get; set; }
         public List<Item> Items { get; set; }
+        public List<VariCombi> VariCombis { get; set; }
     }
 }
