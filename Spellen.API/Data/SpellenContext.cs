@@ -61,24 +61,6 @@ namespace Spellen.API.Data
                 )
             );
 
-            // MATERIAALSPEL & CATEGORIESPEL
-            // Samengestelde sleutels moeten in OnModelCreating worden gedefinieerd
-
-            // modelBuilder.Entity<MateriaalSpel>()
-            // .HasKey(ms => new { ms.MateriaalId, ms.SpelId });
-
-            // modelBuilder.Entity<CategorieSpel>()
-            // .HasKey(cs => new { cs.CategorieId, cs.SpelId });
-
-
-            // VARICOMBI
-            // Deze relatie is lastiger te leggen
-            // modelBuilder.Entity<VariCombi>()
-            // .HasMany(v => v.Games)
-            // .WithMany(g => g.VariCombis);
-
-            // GEEFT ERRORS
-
             // ---------------
             // SEEDING
             // ---------------
@@ -91,6 +73,10 @@ namespace Spellen.API.Data
                 new Category() {
                     CategoryId = new Guid("2d261a66-3fa0-4c5b-91fb-7ff75999733b"),
                     Name = "Verstoppen"
+                },
+                new Category() {
+                    CategoryId = new Guid("cc78fbbb-a46b-437e-8978-ae20d9243a29"),
+                    Name = "Tikken / Tikkertje"
                 }
             );
 
@@ -99,50 +85,10 @@ namespace Spellen.API.Data
                 new Item() {
                     ItemId = new Guid("1f816b47-d874-4458-8acb-02812c8c4366"),
                     Name = "Potjes",
-                }
-            );
-
-            // SPELLEN
-            modelBuilder.Entity<Game>().HasData(
-                new Game(){
-                    GameId = new Guid("5c501909-602a-4768-9362-3b7333d5374d"),
-                    Name = "Tussen 2 vuren",
-                    Explanation = "Tussen 2 vuren is een spel met twee teams en een bal en je gooit de andere eraan. En O ja, er is ook iets met een kapitein.",
-                    Duration = "15 tot 30 minuten",
-                    Terrain = new List<string>() {"Buiten", "Grote zaal"},
-                    AgeFrom = 5,
-                    AgeTo = 99,
-                    PlayersMin = 6,
-                    PlayersMax = 99,
-                    Categories = new List<Category>() {
-                        new Category() {
-                            CategoryId = new Guid("f03502ed-f8c6-45d4-a283-62cd9a36865a"),
-                            Name = "Pleinspelen"
-                        }
-                    },
-                    Items = new List<Item>() {
-                        new Item() {
-                            ItemId = new Guid("1f816b47-d874-4458-8acb-02812c8c4366"),
-                            Name = "Potjes",
-                        }
-                    }
                 },
-                new Game() {
-                    GameId = new Guid("f740596e-90f4-4354-8e01-5aa1f76cd5be"),
-                    Name = "Kiekeboe",
-                    Explanation = "Kiekeboe is een verstopspel. Er is één zoeker die begint af te tellen vanaf 20. Binnen deze tijd moet iedereen zich verstopt hebben. De zoeker mag 3 stappen zetten en dan 'Kiekeboe' roepen, hij begint dan af te tellen vanaf 19, iedereen moet hem dan in die tijd aantikken en zich terug verstoppen... Wanneer je gevonden bent, mag je niet terug verstoppen.",
-                    Duration = "5 tot 20 minuten",
-                    Terrain = new List<string>() {"Buiten"},
-                    AgeFrom = 5,
-                    AgeTo = 99,
-                    PlayersMin = 3,
-                    PlayersMax = 99,
-                    Categories = new List<Category>() {
-                        new Category() {
-                            CategoryId = new Guid("2d261a66-3fa0-4c5b-91fb-7ff75999733b"),
-                            Name = "Verstoppen"
-                        }
-                    }
+                new Item() {
+                    ItemId = new Guid("dacd3f2e-302b-4211-99a3-5de850821102"),
+                    Name = "Kommel / Touw",
                 }
             );
         }
