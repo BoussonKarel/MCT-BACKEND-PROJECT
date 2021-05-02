@@ -30,6 +30,9 @@ namespace Spellen.API.Controllers
         // VARI COMBIS ARE LEFT OUT FOR NOW BECAUSE OF TIME
         // THEY CAN BE ADDED IN A NEXT UPDATE, A V2 OF THE API
 
+        /// <summary>
+        /// Get all games (with given parametes)
+        /// </summary>
         [HttpGet]
         [Route("games")]
         public async Task<ActionResult<List<Game>>> GetGames(
@@ -57,6 +60,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Find game by id
+        /// </summary>
         [HttpGet]
         [Route("games/{gameId}")]
         public async Task<ActionResult<Game>> GetGameById(Guid gameId) {
@@ -68,6 +74,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Add a new game
+        /// </summary>
         [HttpPost]
         [Route("games")]
         public async Task<ActionResult<Game>> AddGame(GameAddDTO game) {
@@ -79,6 +88,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Update an existing game
+        /// </summary>
         [HttpPut]
         [Route("games")]
         public async Task<ActionResult<GameUpdateDTO>> UpdateGame(GameUpdateDTO game) {
@@ -92,6 +104,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a game
+        /// </summary>
         [HttpDelete]
         [Route("games/{gameId}")]
         public async Task<ActionResult> DeleteGame(Guid gameId) {
@@ -104,6 +119,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all items (optional: search)
+        /// </summary>
         [HttpGet]
         [Route("items")]
         public async Task<ActionResult<List<Item>>> GetItems(string search)
@@ -119,6 +137,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Find item by id
+        /// </summary>
         [HttpGet]
         [Route("items/{itemId}")]
         public async Task<ActionResult<Item>> GetItemById(Guid itemId)
@@ -131,6 +152,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Add an item
+        /// </summary>
         [HttpPost]
         [Route("items")]
         public async Task<ActionResult<Item>> AddItem(ItemDTO item) {
@@ -142,6 +166,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Update an existing item
+        /// </summary>
         [HttpPut]
         [Route("items")]
         public async Task<ActionResult<Item>> UpdateItem(ItemDTO item) {
@@ -155,6 +182,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete an item
+        /// </summary>
         [HttpDelete]
         [Route("items/{itemId}")]
         public async Task<ActionResult> DeleteItem(Guid itemId) {
@@ -168,6 +198,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all categories (optional: search)
+        /// </summary>
         [HttpGet]
         [Route("categories")]
         public async Task<ActionResult<List<Category>>> GetCategories(string search)
@@ -182,6 +215,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Find category by id
+        /// </summary>
         [HttpGet]
         [Route("categories/{categoryId}")]
         public async Task<ActionResult<Category>> GetCategoryById(Guid categoryId)
@@ -194,6 +230,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Add a new category
+        /// </summary>
         [HttpPost]
         [Route("categories")]
         public async Task<ActionResult<Category>> AddCategory(CategoryDTO category) {
@@ -205,6 +244,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Update an existing category
+        /// </summary>
         [HttpPut]
         [Route("categories")]
         public async Task<ActionResult<Category>> UpdateCategory(CategoryDTO category) {
@@ -218,6 +260,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a category
+        /// </summary>
         [HttpDelete]
         [Route("categories/{categoryId}")]
         public async Task<ActionResult> DeleteCategory(Guid categoryId) {
@@ -231,6 +276,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all categories of a game
+        /// </summary>
         [HttpGet]
         [Route("games/{gameId}/categories")]
         public async Task<ActionResult<List<GameCategory>>> GetCategoriesOfGame(Guid gameId) {
@@ -244,6 +292,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Update (add / remove) categories of a game
+        /// </summary>
         [HttpPut]
         [Route("games/{gameId}/categories")]
         public async Task<ActionResult<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories) {
@@ -255,6 +306,9 @@ namespace Spellen.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all items of a game
+        /// </summary>
         [HttpGet]
         [Route("games/{gameId}/items")]
         public async Task<ActionResult<GameItem>> GetItemsOfGame(Guid gameId) {
@@ -265,7 +319,10 @@ namespace Spellen.API.Controllers
                 return new StatusCodeResult(500);
             }
         }
-
+        
+        /// <summary>
+        /// Update (add / remove) items of a game
+        /// </summary>
         [HttpPut]
         [Route("games/{gameId}/items")]
         public async Task<ActionResult<GameItem>> UpdateItemsOfGame(Guid gameId, List<GameItem> items) {
