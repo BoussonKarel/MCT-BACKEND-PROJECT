@@ -35,7 +35,7 @@ namespace Spellen.API.Repositories
             }
 
             // Categorieën voor die game ophalen
-            List<GameCategory> existingCategories = await _context.GameCategories.Where(gc => gc.GameId == gameId).AsNoTracking().ToListAsync();
+            List<GameCategory> existingCategories = await _context.GameCategories.Where(gc => gc.GameId == gameId).ToListAsync();
             await _context.SaveChangesAsync();
 
             // Nog geen categorieën? Nieuwe lijst maken
