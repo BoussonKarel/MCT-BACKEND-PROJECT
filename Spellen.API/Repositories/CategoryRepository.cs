@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,12 @@ namespace Spellen.API.Repositories
     public interface ICategoryRepository
     {
         Task<Category> AddCategory(Category category);
-        Task DeleteCategory(Guid categoryId);
+        Task<bool> DeleteCategory(Guid categoryId);
         Task<List<Category>> GetCategories(string searchQuery = null);
         Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
         Task<Category> GetCategoryById(Guid categoryId);
         Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
-        Task UpdateCategory(Category category);
+        Task<Category> UpdateCategory(Category category);
     }
 
     public class CategoryRepository : ICategoryRepository
@@ -35,22 +36,41 @@ namespace Spellen.API.Repositories
             if (changes > 0)
                 return category;
             else
-                throw new Exception("Category not saved.");
+                throw new Exception("Category not added.");
         }
 
-        public async Task UpdateCategory(Category category)
+        public async Task<Category> UpdateCategory(Category category)
         {
-            _context.Categories.Update(category); // Update de game
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteCategory(Guid categoryId)
-        {
-            Category category = await _context.Categories.Where(c => c.CategoryId == categoryId).SingleOrDefaultAsync();
-            if (category != null)
+            Category existingCategory = await _context.Categories.Where(c => c.CategoryId == category.CategoryId).SingleOrDefaultAsync();
+            if (existingCategory != null)
             {
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
+                _context.Categories.Update(category); // Update de game
+                int changes = await _context.SaveChangesAsync();
+                if (changes > 0)
+                    return category;
+                else
+                    throw new Exception("Category not updated.");
+            }
+            else {
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteCategory(Guid categoryId)
+        {
+            Category existingCategory = await _context.Categories.Where(c => c.CategoryId == categoryId).SingleOrDefaultAsync();
+            if (existingCategory != null)
+            {
+                _context.Categories.Remove(existingCategory);
+                int changes = await _context.SaveChangesAsync();
+                if (changes > 0) 
+                    return true;
+                else
+                    throw new Exception("Category not deleted.");
+                
+            }
+            else {
+                return false;
             }
         }
 
@@ -94,11 +114,14 @@ namespace Spellen.API.Repositories
 
             // Update de categorieën
             _context.GameCategories.AddRange(categoriesToAdd);
-            await _context.SaveChangesAsync();
+            int changesAdd = await _context.SaveChangesAsync();
             _context.GameCategories.RemoveRange(categoriesToRemove);
-            await _context.SaveChangesAsync();
+            int changesRemove = await _context.SaveChangesAsync();
 
-            return categories;
+            if (changesAdd > 0 && changesRemove > 0)
+                return categories;
+            else
+                return null;
         }
 
         public async Task<List<Category>> GetCategories(string searchQuery = null)

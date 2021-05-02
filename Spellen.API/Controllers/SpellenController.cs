@@ -204,8 +204,11 @@ namespace Spellen.API.Controllers
         [Route("categories")]
         public async Task<ActionResult<CategoryDTO>> UpdateCategory(CategoryDTO category) {
             try {
-                await _categoryService.UpdateCategory(category);
-                return category;
+                CategoryDTO result = await _categoryService.UpdateCategory(category);
+                if (result == null)
+                    return NotFound();
+                else
+                    return new OkObjectResult(result);
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -216,8 +219,9 @@ namespace Spellen.API.Controllers
         [Route("categories/{categoryId}")]
         public async Task<ActionResult> DeleteCategory(Guid categoryId) {
             try {
-                await _categoryService.DeleteCategory(categoryId);
-                return Ok();
+                bool succes = await _categoryService.DeleteCategory(categoryId);
+                if (succes) return Ok();
+                else return NotFound();
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -226,9 +230,11 @@ namespace Spellen.API.Controllers
 
         [HttpGet]
         [Route("games/{gameId}/categories")]
-        public async Task<ActionResult<GameCategory>> GetCategoriesOfGame(Guid gameId) {
+        public async Task<ActionResult<List<GameCategory>>> GetCategoriesOfGame(Guid gameId) {
             try {
-                return new OkObjectResult(await _categoryService.GetCategoriesOfGame(gameId));
+                List<GameCategory> categories = await _categoryService.GetCategoriesOfGame(gameId);
+                if (categories == null) return NotFound();
+                else return new OkObjectResult(categories);
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
