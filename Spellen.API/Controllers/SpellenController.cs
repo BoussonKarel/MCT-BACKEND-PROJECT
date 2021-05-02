@@ -27,6 +27,9 @@ namespace Spellen.API.Controllers
             _categoryService = categoryService;
         }
 
+        // VARI COMBIS ARE LEFT OUT FOR NOW BECAUSE OF TIME
+        // THEY CAN BE ADDED IN A NEXT UPDATE, A V2 OF THE API
+
         [HttpGet]
         [Route("games")]
         public async Task<ActionResult<List<Game>>> GetGames(

@@ -29,9 +29,13 @@ namespace Spellen.API.Data
         public DbSet<Game> Games { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
+        // VARI COMBIS ARE LEFT OUT FOR NOW BECAUSE OF TIME
+        // THEY CAN BE ADDED IN A NEXT UPDATE, A V2 OF THE API
         public DbSet<VariCombi> VariCombis { get; set; }
         public DbSet<GameCategory> GameCategories { get; set; }
         public DbSet<GameItem> GameItems { get; set; }
+        // VARI COMBIS ARE LEFT OUT FOR NOW BECAUSE OF TIME
+        // THEY CAN BE ADDED IN A NEXT UPDATE, A V2 OF THE API
         public DbSet<GameVariCombi> GameVariCombis { get; set; }
 
         public ConnectionStrings _connectionStrings;
