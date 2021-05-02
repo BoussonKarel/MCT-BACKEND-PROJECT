@@ -1,3 +1,4 @@
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ using Spellen.API.Repositories;
 using Spellen.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Spellen.API.Configuration;
+using System.Reflection;
 
 namespace Spellen.API
 {
@@ -65,6 +67,11 @@ namespace Spellen.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MCT_BACKEND_PROJECT", Version = "v1" });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
