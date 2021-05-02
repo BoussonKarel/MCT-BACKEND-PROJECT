@@ -36,7 +36,6 @@ namespace Spellen.API.Repositories
 
             // Categorieën voor die game ophalen
             List<GameCategory> existingCategories = await _context.GameCategories.Where(gc => gc.GameId == gameId).ToListAsync();
-            await _context.SaveChangesAsync();
 
             // Nog geen categorieën? Nieuwe lijst maken
             if (existingCategories == null) existingCategories = new List<GameCategory>();
@@ -60,11 +59,10 @@ namespace Spellen.API.Repositories
             }
 
             // Update de categorieën
-            IGameContext context = _context;
-            context.GameCategories.AddRange(categoriesToAdd);
-            await context.SaveChangesAsync();
-            context.GameCategories.RemoveRange(categoriesToRemove);
-            await context.SaveChangesAsync();
+            _context.GameCategories.AddRange(categoriesToAdd);
+            await _context.SaveChangesAsync();
+            _context.GameCategories.RemoveRange(categoriesToRemove);
+            await _context.SaveChangesAsync();
 
             return categories;
         }

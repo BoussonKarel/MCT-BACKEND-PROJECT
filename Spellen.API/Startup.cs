@@ -59,6 +59,8 @@ namespace Spellen.API
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             // Services
             services.AddTransient<IGameService, GameService>();
+            services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
             services.AddSwaggerGen(c =>
             {

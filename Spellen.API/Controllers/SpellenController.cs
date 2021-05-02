@@ -16,11 +16,15 @@ namespace Spellen.API.Controllers
     public class SpellenController : ControllerBase
     {
         private readonly IGameService _gameService;
+        private readonly IItemService _itemService;
+        private readonly ICategoryService _categoryService;
         private readonly ILogger<SpellenController> _logger;
-        public SpellenController(ILogger<SpellenController> logger, IGameService gameService)
+        public SpellenController(ILogger<SpellenController> logger, IGameService gameService, IItemService itemService, ICategoryService categoryService)
         {
             _logger = logger;
             _gameService = gameService;
+            _itemService = itemService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -94,7 +98,7 @@ namespace Spellen.API.Controllers
         public async Task<ActionResult<List<Item>>> GetItems()
         {
             try {
-                return new OkObjectResult(await _gameService.GetItems());
+                return new OkObjectResult(await _itemService.GetItems());
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -106,7 +110,7 @@ namespace Spellen.API.Controllers
         public async Task<ActionResult<List<Category>>> GetCategories()
         {
             try {
-                return new OkObjectResult(await _gameService.GetCategories());
+                return new OkObjectResult(await _categoryService.GetCategories());
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -117,7 +121,7 @@ namespace Spellen.API.Controllers
         [Route("games/{gameId}/categories")]
         public async Task<ActionResult<GameCategory>> GetCategoriesOfGame(Guid gameId) {
             try {
-                return new OkObjectResult(await _gameService.GetCategoriesOfGame(gameId));
+                return new OkObjectResult(await _categoryService.GetCategoriesOfGame(gameId));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -128,7 +132,29 @@ namespace Spellen.API.Controllers
         [Route("games/{gameId}/categories")]
         public async Task<ActionResult<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories) {
             try {
-                return new OkObjectResult(await _gameService.UpdateCategoriesOfGame(gameId, categories));
+                return new OkObjectResult(await _categoryService.UpdateCategoriesOfGame(gameId, categories));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("games/{gameId}/items")]
+        public async Task<ActionResult<GameItem>> GetItemsOfGame(Guid gameId) {
+            try {
+                return new OkObjectResult(await _itemService.GetItemsOfGame(gameId));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPut]
+        [Route("games/{gameId}/items")]
+        public async Task<ActionResult<GameItem>> UpdateItemsOfGame(Guid gameId, List<GameItem> items) {
+            try {
+                return new OkObjectResult(await _itemService.UpdateItemsOfGame(gameId, items));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

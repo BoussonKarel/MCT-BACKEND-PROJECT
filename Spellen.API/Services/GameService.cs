@@ -12,28 +12,20 @@ namespace Spellen.API.Services
     {
         Task<Game> AddGame(GameAddDTO game);
         Task DeleteGame(Guid gameId);
-        Task<List<Category>> GetCategories();
-        Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
-        Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
         Task<Game> GetGameById(Guid gameId);
         Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
-        Task<List<Item>> GetItems();
         Task UpdateGame(GameUpdateDTO game);
     }
 
     public class GameService : IGameService
     {
         private IGameRepository _gameRepository;
-        private IItemRepository _itemRepository;
-        private ICategoryRepository _categoryRepository;
         private IMapper _mapper;
 
-        public GameService(IMapper mapper, IGameRepository gameRepository, IItemRepository itemRepository, ICategoryRepository categoryRepository)
+        public GameService(IMapper mapper, IGameRepository gameRepository)
         {
             _mapper = mapper;
             _gameRepository = gameRepository;
-            _itemRepository = itemRepository;
-            _categoryRepository = categoryRepository;
         }
 
         public async Task<Game> GetGameById(Guid gameId)
@@ -76,24 +68,6 @@ namespace Spellen.API.Services
             await _gameRepository.DeleteGame(gameId);
         }
 
-        public async Task<List<Item>> GetItems()
-        {
-            return await _itemRepository.GetItems();
-        }
 
-        public async Task<List<Category>> GetCategories()
-        {
-            return await _categoryRepository.GetCategories();
-        }
-
-        public async Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId)
-        {
-            return await _categoryRepository.GetCategoriesOfGame(gameId);
-        }
-
-        public async Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories)
-        {
-            return await _categoryRepository.UpdateCategoriesOfGame(gameId, categories);
-        }
     }
 }
