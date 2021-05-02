@@ -36,12 +36,12 @@ namespace Spellen.API.Repositories
             if (changes > 0)
                 return category;
             else
-                throw new Exception("Category not added.");
+                throw new Exception("Category could not be added.");
         }
 
         public async Task<Category> UpdateCategory(Category category)
         {
-            Category existingCategory = await _context.Categories.Where(c => c.CategoryId == category.CategoryId).SingleOrDefaultAsync();
+            Category existingCategory = await _context.Categories.Where(c => c.CategoryId == category.CategoryId).AsNoTracking().SingleOrDefaultAsync();
             if (existingCategory != null)
             {
                 _context.Categories.Update(category); // Update de game
@@ -49,7 +49,7 @@ namespace Spellen.API.Repositories
                 if (changes > 0)
                     return category;
                 else
-                    throw new Exception("Category not updated.");
+                    throw new Exception("Category could not be updated.");
             }
             else {
                 return null;
@@ -66,7 +66,7 @@ namespace Spellen.API.Repositories
                 if (changes > 0) 
                     return true;
                 else
-                    throw new Exception("Category not deleted.");
+                    throw new Exception("Category could not be deleted.");
                 
             }
             else {

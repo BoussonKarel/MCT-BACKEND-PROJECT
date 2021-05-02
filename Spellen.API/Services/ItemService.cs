@@ -11,11 +11,11 @@ namespace Spellen.API.Services
     public interface IItemService
     {
         Task<Item> AddItem(ItemDTO item);
-        Task DeleteItem(Guid itemId);
+        Task<bool> DeleteItem(Guid itemId);
         Task<List<Item>> GetItems(string searchQuery = null);
         Task<Item> GetItemById(Guid itemId);
         Task<List<GameItem>> GetItemsOfGame(Guid gameId);
-        Task UpdateItem(ItemDTO item);
+        Task<Item> UpdateItem(ItemDTO item);
         Task<List<GameItem>> UpdateItemsOfGame(Guid gameId, List<GameItem> items);
     }
 
@@ -44,15 +44,19 @@ namespace Spellen.API.Services
             return await _itemRepository.AddItem(newItem);
         }
 
-        public async Task UpdateItem(ItemDTO item)
+        public async Task<Item> UpdateItem(ItemDTO item)
         {
             Item itemToUpdate = _mapper.Map<Item>(item);
-            await _itemRepository.UpdateItem(itemToUpdate);
+            Item result = await _itemRepository.UpdateItem(itemToUpdate);
+            if (result == null)
+                return null;
+            else
+                return result;
         }
 
-        public async Task DeleteItem(Guid itemId)
+        public async Task<bool> DeleteItem(Guid itemId)
         {
-            await _itemRepository.DeleteItem(itemId);
+            return await _itemRepository.DeleteItem(itemId);
         }
 
         public async Task<List<GameItem>> GetItemsOfGame(Guid gameId)

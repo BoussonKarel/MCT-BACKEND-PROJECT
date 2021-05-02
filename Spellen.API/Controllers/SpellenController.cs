@@ -141,10 +141,11 @@ namespace Spellen.API.Controllers
 
         [HttpPut]
         [Route("items")]
-        public async Task<ActionResult<ItemDTO>> UpdateItem(ItemDTO item) {
+        public async Task<ActionResult<Item>> UpdateItem(ItemDTO item) {
             try {
-                await _itemService.UpdateItem(item);
-                return item;
+                Item result = await _itemService.UpdateItem(item);
+                if (result == null) return NotFound();
+                else return new OkObjectResult(result);
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -155,8 +156,9 @@ namespace Spellen.API.Controllers
         [Route("items/{itemId}")]
         public async Task<ActionResult> DeleteItem(Guid itemId) {
             try {
-                await _itemService.DeleteItem(itemId);
-                return Ok();
+                bool succes = await _itemService.DeleteItem(itemId);
+                if (succes) return Ok();
+                else return NotFound();
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -202,13 +204,11 @@ namespace Spellen.API.Controllers
 
         [HttpPut]
         [Route("categories")]
-        public async Task<ActionResult<CategoryDTO>> UpdateCategory(CategoryDTO category) {
+        public async Task<ActionResult<Category>> UpdateCategory(CategoryDTO category) {
             try {
-                CategoryDTO result = await _categoryService.UpdateCategory(category);
-                if (result == null)
-                    return NotFound();
-                else
-                    return new OkObjectResult(result);
+                Category result = await _categoryService.UpdateCategory(category);
+                if (result == null) return NotFound();
+                else return new OkObjectResult(result);
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

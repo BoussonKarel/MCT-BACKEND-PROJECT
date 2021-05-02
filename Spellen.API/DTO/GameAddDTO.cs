@@ -20,7 +20,7 @@ namespace Spellen.API.DTO
         public int PlayersMin { get; set; }
         [JsonPropertyName("players_max")]
         public int PlayersMax { get; set; }
-        public List<CategoryDTO> Categories { get; set; }
-        public List<ItemDTO> Items { get; set; }
+        public List<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
+        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
     }
 }

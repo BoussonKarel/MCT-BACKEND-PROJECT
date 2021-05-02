@@ -11,11 +11,11 @@ namespace Spellen.API.Repositories
     public interface IItemRepository
     {
         Task<Item> AddItem(Item item);
-        Task DeleteItem(Guid itemId);
+        Task<bool> DeleteItem(Guid itemId);
         Task<Item> GetItemById(Guid ItemId);
         Task<List<Item>> GetItems(string searchQuery = null);
         Task<List<GameItem>> GetItemsOfGame(Guid gameId);
-        Task UpdateItem(Item item);
+        Task<Item> UpdateItem(Item item);
         Task<List<GameItem>> UpdateItemsOfGame(Guid gameId, List<GameItem> items);
     }
 
@@ -34,22 +34,40 @@ namespace Spellen.API.Repositories
             if (changes > 0)
                 return item;
             else
-                throw new Exception("Item not saved.");
+                throw new Exception("Item could not be added.");
         }
 
-        public async Task UpdateItem(Item item)
+        public async Task<Item> UpdateItem(Item item)
         {
-            _context.Items.Update(item);
-            await _context.SaveChangesAsync();
+            Item existingItem = await _context.Items.Where(i => i.ItemId == item.ItemId).AsNoTracking().SingleOrDefaultAsync();
+            if (existingItem != null) {
+                _context.Items.Update(item);
+                int changes = await _context.SaveChangesAsync();
+                if (changes > 0)
+                    return item;
+                else
+                    throw new Exception("Item could not be updated.");
+            }
+            else {
+                return null;
+            }
+            
         }
 
-        public async Task DeleteItem(Guid itemId)
+        public async Task<bool> DeleteItem(Guid itemId)
         {
-            Item item = await _context.Items.Where(i => i.ItemId == itemId).SingleOrDefaultAsync();
-            if (item != null)
+            Item existingItem = await _context.Items.Where(i => i.ItemId == itemId).SingleOrDefaultAsync();
+            if (existingItem != null)
             {
-                _context.Items.Remove(item);
-                await _context.SaveChangesAsync();
+                _context.Items.Remove(existingItem);
+                int changes = await _context.SaveChangesAsync();
+                if (changes > 0)
+                    return true;
+                else
+                    throw new Exception("Item could not be deleted.");
+            }
+            else {
+                return false;
             }
         }
 
@@ -112,11 +130,14 @@ namespace Spellen.API.Repositories
 
             // Update de items
             _context.GameItems.AddRange(itemsToAdd);
-            await _context.SaveChangesAsync();
+            int changesAdd = await _context.SaveChangesAsync();
             _context.GameItems.RemoveRange(categoriesToRemove);
-            await _context.SaveChangesAsync();
+            int changesRemove = await _context.SaveChangesAsync();
 
-            return items;
+            if (changesAdd > 0 && changesRemove > 0)
+                return items;
+            else
+                return null;
         }
     }
 }

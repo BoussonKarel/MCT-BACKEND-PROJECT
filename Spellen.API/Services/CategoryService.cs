@@ -16,7 +16,7 @@ namespace Spellen.API.Services
         Task<Category> GetCategoryById(Guid categoryId);
         Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
         Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
-        Task<CategoryDTO> UpdateCategory(CategoryDTO category);
+        Task<Category> UpdateCategory(CategoryDTO category);
     }
 
     public class CategoryService : ICategoryService
@@ -46,14 +46,14 @@ namespace Spellen.API.Services
             return await _categoryRepository.AddCategory(newCategory);
         }
 
-        public async Task<CategoryDTO> UpdateCategory(CategoryDTO category)
+        public async Task<Category> UpdateCategory(CategoryDTO category)
         {
             Category catToUpdate = _mapper.Map<Category>(category);
             Category result = await _categoryRepository.UpdateCategory(catToUpdate);
             if (result == null)
                 return null;
             else
-                return _mapper.Map<CategoryDTO>(result);
+                return result;
         }
 
         public async Task<bool> DeleteCategory(Guid categoryId)
