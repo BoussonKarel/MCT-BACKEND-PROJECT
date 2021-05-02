@@ -15,6 +15,7 @@ namespace Spellen.API.Repositories
         Task DeleteCategory(Guid categoryId);
         Task<List<Category>> GetCategories(string searchQuery = null);
         Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
+        Task<Category> GetCategoryById(Guid categoryId);
         Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
         Task UpdateCategory(Category category);
     }
@@ -112,6 +113,11 @@ namespace Spellen.API.Repositories
                     .Where(i => i.Name.ToLower().Contains(searchQuery.Trim().ToLower()))
                     .ToListAsync();
             }
+        }
+
+        public async Task<Category> GetCategoryById(Guid categoryId)
+        {
+            return await _context.Categories.Where(c => c.CategoryId == categoryId).SingleOrDefaultAsync();
         }
     }
 }

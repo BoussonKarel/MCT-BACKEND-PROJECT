@@ -116,6 +116,18 @@ namespace Spellen.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("items/{itemId}")]
+        public async Task<ActionResult<Item>> GetItemById(Guid itemId)
+        {
+            try {
+                return new OkObjectResult(await _itemService.GetItemById(itemId));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [HttpPost]
         [Route("items")]
         public async Task<ActionResult<Item>> AddItem(ItemDTO item) {
@@ -159,6 +171,18 @@ namespace Spellen.API.Controllers
                 if (string.IsNullOrWhiteSpace(search))
                     search = null;
                 return new OkObjectResult(await _categoryService.GetCategories(search));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("categories/{categoryId}")]
+        public async Task<ActionResult<Category>> GetCategoryById(Guid categoryId)
+        {
+            try {
+                return new OkObjectResult(await _categoryService.GetCategoryById(categoryId));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

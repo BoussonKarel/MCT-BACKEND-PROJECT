@@ -12,6 +12,7 @@ namespace Spellen.API.Repositories
     {
         Task<Item> AddItem(Item item);
         Task DeleteItem(Guid itemId);
+        Task<Item> GetItemById(Guid ItemId);
         Task<List<Item>> GetItems(string searchQuery = null);
         Task<List<GameItem>> GetItemsOfGame(Guid gameId);
         Task UpdateItem(Item item);
@@ -64,6 +65,11 @@ namespace Spellen.API.Repositories
                     .Where(i => i.Name.ToLower().Contains(searchQuery.Trim().ToLower()))
                     .ToListAsync();
             }
+        }
+
+        public async Task<Item> GetItemById(Guid ItemId)
+        {
+            return await _context.Items.Where(i => i.ItemId == ItemId).SingleOrDefaultAsync();
         }
 
         public async Task<List<GameItem>> GetItemsOfGame(Guid gameId)
