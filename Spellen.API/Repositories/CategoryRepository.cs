@@ -13,7 +13,7 @@ namespace Spellen.API.Repositories
     {
         Task<Category> AddCategory(Category category);
         Task DeleteCategory(Guid categoryId);
-        Task<List<Category>> GetCategories();
+        Task<List<Category>> GetCategories(string searchQuery = null);
         Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
         Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
         Task UpdateCategory(Category category);
@@ -100,9 +100,18 @@ namespace Spellen.API.Repositories
             return categories;
         }
 
-        public async Task<List<Category>> GetCategories()
+        public async Task<List<Category>> GetCategories(string searchQuery = null)
         {
-            return await _context.Categories.ToListAsync();
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return await _context.Categories.ToListAsync();
+            }
+            else
+            {
+                return await _context.Categories
+                    .Where(i => i.Name.ToLower().Contains(searchQuery.Trim().ToLower()))
+                    .ToListAsync();
+            }
         }
     }
 }

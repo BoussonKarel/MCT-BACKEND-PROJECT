@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Spellen.API.Repositories
     {
         Task<Game> AddGame(Game game);
         Task<Game> GetGameById(Guid gameId);
-        Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
+        Task<List<Game>> GetGames(GameParams gameParams);
         Task UpdateGame(Game game);
         Task DeleteGame(Guid gameId);
     }
@@ -32,14 +33,7 @@ namespace Spellen.API.Repositories
             return await _context.Games.Where(g => g.GameId == gameId).Include(g => g.GameCategories).ThenInclude(cg => cg.Category).Include(g => g.GameItems).ThenInclude(ig => ig.Item).SingleOrDefaultAsync();
         }
 
-        public async Task<List<Game>> GetGames(
-            string searchQuery = null,
-            int? ageFrom = null,
-            int? ageTo = null,
-            int? playersMin = null,
-            int? playersMax = null,
-            Guid? categoryId = null
-        )
+        public async Task<List<Game>> GetGames(GameParams gameParams)
         {
             // STANDAARD QUERY
             IQueryable<Game> gamesQuery = _context.Games
@@ -49,27 +43,30 @@ namespace Spellen.API.Repositories
             .ThenInclude(ig => ig.Item);
 
             // ZOEKTERM
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+            if (!string.IsNullOrWhiteSpace(gameParams.SearchQuery))
                 gamesQuery = gamesQuery.Where(g =>
-                    g.Name.ToLower().Contains(searchQuery.Trim().ToLower()) // Zit het zoekwoord in de naam
-                    || g.Explanation.ToLower().Contains(searchQuery.Trim().ToLower()) // of in de uitleg)
+                    g.Name.ToLower().Contains(gameParams.SearchQuery.Trim().ToLower()) // Zit het zoekwoord in de naam
+                    || g.Explanation.ToLower().Contains(gameParams.SearchQuery.Trim().ToLower()) // of in de uitleg)
                 );
 
             // LEEFTIJD
-            if (ageFrom != null)
-                gamesQuery = gamesQuery.Where(g => g.AgeFrom >= ageFrom);
-            if (ageTo != null)
-                gamesQuery = gamesQuery.Where(g => g.AgeTo <= ageTo);
+            if (gameParams.AgeFrom != null)
+                gamesQuery = gamesQuery.Where(g => g.AgeFrom >= gameParams.AgeFrom);
+            if (gameParams.AgeTo != null)
+                gamesQuery = gamesQuery.Where(g => g.AgeTo <= gameParams.AgeTo);
 
             // SPELERS
-            if (playersMin != null)
-                gamesQuery = gamesQuery.Where(g => g.PlayersMin >= playersMin);
-            if (playersMax != null)
-                gamesQuery = gamesQuery.Where(g => g.PlayersMax <= playersMax);
+            if (gameParams.PlayersMin != null)
+                gamesQuery = gamesQuery.Where(g => g.PlayersMin >= gameParams.PlayersMin);
+            if (gameParams.PlayersMax != null)
+                gamesQuery = gamesQuery.Where(g => g.PlayersMax <= gameParams.PlayersMax);
 
             // CATEGORIE
-            if (categoryId != null)
-                gamesQuery.Where(g => g.GameCategories.Where(c => c.CategoryId == categoryId).Count() > 0);
+            if (gameParams.CategoryId != null)
+                gamesQuery = gamesQuery.Where(
+                    // Is er 'any' categorie die overeenkomt?
+                    g => g.GameCategories.Any(gc => gc.CategoryId == gameParams.CategoryId)
+                );
 
             return await gamesQuery.ToListAsync();
         }

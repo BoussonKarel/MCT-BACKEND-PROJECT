@@ -12,7 +12,7 @@ namespace Spellen.API.Services
     {
         Task<Category> AddCategory(CategoryDTO category);
         Task DeleteCategory(Guid categoryId);
-        Task<List<Category>> GetCategories();
+        Task<List<Category>> GetCategories(string searchQuery = null);
         Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
         Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
         Task UpdateCategory(CategoryDTO category);
@@ -29,9 +29,9 @@ namespace Spellen.API.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<List<Category>> GetCategories()
+        public async Task<List<Category>> GetCategories(string searchQuery = null)
         {
-            return await _categoryRepository.GetCategories();
+            return await _categoryRepository.GetCategories(searchQuery);
         }
 
         public async Task<Category> AddCategory(CategoryDTO category)

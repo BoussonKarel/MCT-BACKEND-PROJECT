@@ -30,15 +30,24 @@ namespace Spellen.API.Controllers
         [HttpGet]
         [Route("games")]
         public async Task<ActionResult<List<Game>>> GetGames(
-            string search = "",
-            string terrein = "",
+            string search = null,
+            int? age_from = null,
+            int?  age_to = null,
+            int?  players_min = null,
+            int?  players_max = null,
             Guid? categoryId = null
         ) {
             try {
-                if (string.IsNullOrWhiteSpace(search))
-                    return new OkObjectResult(await _gameService.GetGames());
-                else
-                    return new OkObjectResult(await _gameService.GetGames(searchQuery: search, categoryId: categoryId));
+                GameParams parameters = new GameParams() {
+                    SearchQuery = search,
+                    AgeFrom = age_from,
+                    AgeTo = age_to,
+                    PlayersMin = players_min,
+                    PlayersMax = players_max,
+                    CategoryId = categoryId
+                };
+
+                return new OkObjectResult(await _gameService.GetGames(parameters));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -94,10 +103,13 @@ namespace Spellen.API.Controllers
 
         [HttpGet]
         [Route("items")]
-        public async Task<ActionResult<List<Item>>> GetItems()
+        public async Task<ActionResult<List<Item>>> GetItems(string search)
         {
             try {
-                return new OkObjectResult(await _itemService.GetItems());
+                if (string.IsNullOrWhiteSpace(search))
+                    search = null;
+
+                return new OkObjectResult(await _itemService.GetItems(search));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);
@@ -117,7 +129,7 @@ namespace Spellen.API.Controllers
 
         [HttpPut]
         [Route("items")]
-        public async Task<ActionResult<ItemDTO>> DeleteItem(ItemDTO item) {
+        public async Task<ActionResult<ItemDTO>> UpdateItem(ItemDTO item) {
             try {
                 await _itemService.UpdateItem(item);
                 return item;
@@ -141,10 +153,12 @@ namespace Spellen.API.Controllers
 
         [HttpGet]
         [Route("categories")]
-        public async Task<ActionResult<List<Category>>> GetCategories()
+        public async Task<ActionResult<List<Category>>> GetCategories(string search)
         {
             try {
-                return new OkObjectResult(await _categoryService.GetCategories());
+                if (string.IsNullOrWhiteSpace(search))
+                    search = null;
+                return new OkObjectResult(await _categoryService.GetCategories(search));
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

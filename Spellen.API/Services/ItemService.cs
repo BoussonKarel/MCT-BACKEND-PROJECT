@@ -12,7 +12,7 @@ namespace Spellen.API.Services
     {
         Task<Item> AddItem(ItemDTO item);
         Task DeleteItem(Guid itemId);
-        Task<List<Item>> GetItems();
+        Task<List<Item>> GetItems(string searchQuery = null);
         Task<List<GameItem>> GetItemsOfGame(Guid gameId);
         Task UpdateItem(ItemDTO item);
         Task<List<GameItem>> UpdateItemsOfGame(Guid gameId, List<GameItem> items);
@@ -28,9 +28,9 @@ namespace Spellen.API.Services
             _mapper = mapper;
             _itemRepository = itemRepository;
         }
-        public async Task<List<Item>> GetItems()
+        public async Task<List<Item>> GetItems(string searchQuery = null)
         {
-            return await _itemRepository.GetItems();
+            return await _itemRepository.GetItems(searchQuery);
         }
 
         public async Task<Item> AddItem(ItemDTO item)

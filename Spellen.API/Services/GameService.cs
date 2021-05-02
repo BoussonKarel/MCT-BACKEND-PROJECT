@@ -13,7 +13,7 @@ namespace Spellen.API.Services
         Task<Game> AddGame(GameAddDTO game);
         Task DeleteGame(Guid gameId);
         Task<Game> GetGameById(Guid gameId);
-        Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null);
+        Task<List<Game>> GetGames(GameParams gameParams);
         Task UpdateGame(GameUpdateDTO game);
     }
 
@@ -33,11 +33,10 @@ namespace Spellen.API.Services
             return await _gameRepository.GetGameById(gameId);
         }
 
-        public async Task<List<Game>> GetGames(string searchQuery = null, int? ageFrom = null, int? ageTo = null, int? playersMin = null, int? playersMax = null, Guid? categoryId = null)
+        public async Task<List<Game>> GetGames(GameParams gameParams)
         {
-            return await _gameRepository.GetGames(searchQuery, ageFrom, ageTo, playersMin, playersMax);
+            return await _gameRepository.GetGames(gameParams);
         }
-
         public async Task<Game> AddGame(GameAddDTO game)
         {
             Game newGame = _mapper.Map<Game>(game);
