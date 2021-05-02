@@ -10,8 +10,11 @@ namespace Spellen.API.Repositories
 {
     public interface IItemRepository
     {
+        Task<Item> AddItem(Item item);
+        Task DeleteItem(Guid itemId);
         Task<List<Item>> GetItems(string searchQuery = null);
         Task<List<GameItem>> GetItemsOfGame(Guid gameId);
+        Task UpdateItem(Item item);
         Task<List<GameItem>> UpdateItemsOfGame(Guid gameId, List<GameItem> items);
     }
 
@@ -39,9 +42,11 @@ namespace Spellen.API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteItem(Guid itemId) {
+        public async Task DeleteItem(Guid itemId)
+        {
             Item item = await _context.Items.Where(i => i.ItemId == itemId).SingleOrDefaultAsync();
-            if (item != null) {
+            if (item != null)
+            {
                 _context.Items.Remove(item);
                 await _context.SaveChangesAsync();
             }

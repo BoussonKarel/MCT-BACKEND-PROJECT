@@ -82,9 +82,8 @@ namespace Spellen.API.Controllers
 
         [HttpDelete]
         [Route("games/{gameId}")]
-        public async Task<ActionResult<GameUpdateDTO>> DeleteGame(Guid gameId) {
+        public async Task<ActionResult> DeleteGame(Guid gameId) {
             try {
-                // Update met gameUpdateDTO (game zonder de relaties)
                 await _gameService.DeleteGame(gameId);
                 return Ok();
             }
@@ -105,12 +104,82 @@ namespace Spellen.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("items")]
+        public async Task<ActionResult<Item>> AddItem(ItemDTO item) {
+            try {
+                return new OkObjectResult(await _itemService.AddItem(item));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPut]
+        [Route("items")]
+        public async Task<ActionResult<ItemDTO>> DeleteItem(ItemDTO item) {
+            try {
+                await _itemService.UpdateItem(item);
+                return item;
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpDelete]
+        [Route("items/{itemId}")]
+        public async Task<ActionResult> DeleteItem(Guid itemId) {
+            try {
+                await _itemService.DeleteItem(itemId);
+                return Ok();
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [HttpGet]
         [Route("categories")]
         public async Task<ActionResult<List<Category>>> GetCategories()
         {
             try {
                 return new OkObjectResult(await _categoryService.GetCategories());
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("categories")]
+        public async Task<ActionResult<Category>> AddCategory(CategoryDTO category) {
+            try {
+                return new OkObjectResult(await _categoryService.AddCategory(category));
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpPut]
+        [Route("categories")]
+        public async Task<ActionResult<CategoryDTO>> UpdateCategory(CategoryDTO category) {
+            try {
+                await _categoryService.UpdateCategory(category);
+                return category;
+            }
+            catch(Exception) {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [HttpDelete]
+        [Route("categories/{categoryId}")]
+        public async Task<ActionResult> DeleteCategory(Guid categoryId) {
+            try {
+                await _categoryService.DeleteCategory(categoryId);
+                return Ok();
             }
             catch(Exception) {
                 return new StatusCodeResult(500);

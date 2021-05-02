@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,12 @@ namespace Spellen.API.Repositories
 {
     public interface ICategoryRepository
     {
+        Task<Category> AddCategory(Category category);
+        Task DeleteCategory(Guid categoryId);
         Task<List<Category>> GetCategories();
         Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId);
         Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories);
+        Task UpdateCategory(Category category);
     }
 
     public class CategoryRepository : ICategoryRepository
@@ -23,6 +27,32 @@ namespace Spellen.API.Repositories
             _context = context;
         }
 
+        public async Task<Category> AddCategory(Category category)
+        {
+            _context.Categories.Add(category);
+            int changes = await _context.SaveChangesAsync();
+            if (changes > 0)
+                return category;
+            else
+                throw new Exception("Category not saved.");
+        }
+
+        public async Task UpdateCategory(Category category)
+        {
+            _context.Categories.Update(category); // Update de game
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCategory(Guid categoryId)
+        {
+            Category category = await _context.Categories.Where(c => c.CategoryId == categoryId).SingleOrDefaultAsync();
+            if (category != null)
+            {
+                _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<List<GameCategory>> GetCategoriesOfGame(Guid gameId)
         {
             return await _context.GameCategories.Where(gc => gc.GameId == gameId).Include(gc => gc.Category).ToListAsync();
@@ -30,7 +60,8 @@ namespace Spellen.API.Repositories
 
         public async Task<List<GameCategory>> UpdateCategoriesOfGame(Guid gameId, List<GameCategory> categories)
         {
-            foreach (GameCategory gc in categories) {
+            foreach (GameCategory gc in categories)
+            {
                 gc.GameId = gameId;
             }
 
@@ -42,7 +73,8 @@ namespace Spellen.API.Repositories
 
             List<GameCategory> categoriesToAdd = new List<GameCategory>();
             // Items in game.GameCategories die niet voorkomen in existingCategories
-            foreach (GameCategory category in categories) {
+            foreach (GameCategory category in categories)
+            {
                 // Komt deze categorie voor in de huidige?
                 bool match = existingCategories.Any(gc => gc.CategoryId == category.CategoryId);
                 // Nee? toevoegen
@@ -51,7 +83,8 @@ namespace Spellen.API.Repositories
 
             List<GameCategory> categoriesToRemove = new List<GameCategory>();
             // Items in game.GameCategories die niet voorkomen in existingCategories
-            foreach (GameCategory existingCategory in existingCategories) {
+            foreach (GameCategory existingCategory in existingCategories)
+            {
                 // Komt deze categorie voor in de nieuwe??
                 bool match = categories.Any(gc => gc.CategoryId == existingCategory.CategoryId);
                 // Nee? toevegen (om te verwijderen)
